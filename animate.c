@@ -13,6 +13,16 @@ struct sprite {
 
 struct sprite_placement {
     // TODO
+    struct sprite *ptr_s;
+    struct canvas *ptr_c;
+    ssize_t x;
+    ssize_t y;
+    ssize_t vx;
+    ssize_t vy;
+    ssize_t ax;
+    ssize_t ay;
+    struct sprite_placement *prev;
+    struct sprite_placement *next;
 };
 
 struct canvas {
@@ -20,6 +30,9 @@ struct canvas {
     size_t height;
     size_t width;
     color_t background_color;
+    struct sprite_placement *head;
+    struct sprite_placement *tail;
+
 };
 
 
