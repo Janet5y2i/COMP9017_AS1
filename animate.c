@@ -1,6 +1,8 @@
 #include "animate.h"
 
 #include <stdio.h>
+#include <stdlib.h>
+
 
 struct sprite {
     // TODO
@@ -82,6 +84,17 @@ struct bitmapv5_header {
 struct canvas* animate_create_canvas(size_t height, size_t width,
                                      color_t background_color){
     // TODO
+
+    struct canvas* animate_create_canvas = malloc(sizeof(struct canvas));
+    animate_create_canvas -> height = height;
+    animate_create_canvas -> width = width;
+    animate_create_canvas -> background_color = background_color;
+    
+    if ( animate_create_canvas == NULL){
+        printf("Memory allocate uncessefully");
+        return NULL;
+    }
+    
     return NULL;
 }
 
