@@ -9,6 +9,7 @@ struct sprite {
     size_t width;
     size_t height;
     color_t color;
+    color_t *pixels;
     bool filled;
 
 };
@@ -85,17 +86,20 @@ struct canvas* animate_create_canvas(size_t height, size_t width,
                                      color_t background_color){
     // TODO
 
-    struct canvas* animate_create_canvas = malloc(sizeof(struct canvas));
-    animate_create_canvas -> height = height;
-    animate_create_canvas -> width = width;
-    animate_create_canvas -> background_color = background_color;
+    struct canvas* cv = malloc(sizeof(struct canvas));
     
-    if ( animate_create_canvas == NULL){
+    if ( cv == NULL){
         printf("Memory allocate uncessefully");
         return NULL;
     }
+
+    cv -> height = height;
+    cv -> width = width;
+    cv -> background_color = background_color;
     
-    return NULL;
+    
+    
+    return cv;
 }
 
 struct sprite* animate_create_sprite(const char* file) {
@@ -103,9 +107,34 @@ struct sprite* animate_create_sprite(const char* file) {
     return NULL;
 }
 
+//For circle, the width and height should be the same, which are equal to two times of radius
 struct sprite* animate_create_circle(size_t radius, color_t c, bool filled) {
     // TODO
-    return NULL;
+    struct sprite* acc = malloc(sizeof(struct sprite));
+    
+    if (acc == NULL){
+        printf("Memory allocate uncessefully");
+        return NULL;
+    }
+    acc -> width = radius * 2;
+    acc -> height = radius * 2;
+    acc -> color = c;
+    acc -> filled = filled;
+    acc -> pixels = malloc(acc->width * acc->height * sizeof(color_t));
+    if (acc-> pixels == NULL){
+        printf("Memory allocate uncessefully");
+        return NULL;
+    } else {
+        for (size_t x = 0; x < acc -> width; x++){
+            for(size_t y = 0 ; y < acc -> height; y++){
+                if (abs(radius - x) * abs(radius - x) + abs(radius - y) * abs(radius - y) <= radius*radius){
+                    
+                    acc -> pixels[x + y] = acc -> color;
+                }
+            }
+        }
+    }
+    return acc;
 }
 
 struct sprite* animate_create_rectangle(size_t width, size_t height,
