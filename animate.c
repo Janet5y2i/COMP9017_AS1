@@ -16,8 +16,8 @@ struct sprite {
 
 struct sprite_placement {
     // TODO
-    struct sprite *ptr_s;
-    struct canvas *ptr_c;
+    struct sprite *sprite;
+    struct canvas *canvas;
     ssize_t x;
     ssize_t y;
     ssize_t vx;
@@ -25,7 +25,7 @@ struct sprite_placement {
     ssize_t ax;
     ssize_t ay;
     struct sprite_placement *prev;
-    struct sprite_placement *next;
+    struct sprite_placemet *next;
 };
 
 struct canvas {
@@ -146,7 +146,39 @@ struct sprite* animate_create_circle(size_t radius, color_t c, bool filled) {
 struct sprite* animate_create_rectangle(size_t width, size_t height,
                                         color_t c, bool filled){
     // TODO
-    return NULL;
+    struct sprite* acr = malloc(sizeof(struct sprite));
+    if (acr == NULL){
+        printf("Memory allocate uncessefully");
+        return NULL;
+    }
+
+    acr -> width = width;
+    acr -> height = height;
+    acr -> color = c;
+    acr -> filled = filled;
+    acr -> pixels = malloc(acr -> width * acr -> height *sizeof(color_t));
+    if (acr -> pixels == NULL){
+        printf("Memory allocate uncessefully");
+        return NULL;
+    }
+
+    for(size_t y = 0; y < acr -> height; y++){
+        for (size_t x = 0; x < acr -> width; x++){
+            size_t index = y * width + x;
+            if (filled == true){
+                acr -> pixels[index] = acr -> color;
+            } else {
+                if (filled == false){
+                    if ( x == 0 || x == (width-1) || y == 0 || y == (height-1)){
+                        acr -> pixels[index] = c;
+                    } else {
+                        acr -> pixels[index] = 0;
+                    }
+                }
+            }
+        }
+    }
+    return acr;
 }
 
 bool animate_destroy_sprite(struct sprite* sprite) {
@@ -207,7 +239,7 @@ void animate_generate_frame(const struct canvas* canvas, size_t frame,
     size_t pixal = canvas -> height * canvas -> width;
     //for (buf; buf < size; buf++)
     //    *buf = canvas -> background_color;
-    for (size_t i ; i < pixal; i++){
+    for (size_t i = 0; i < pixal; i++){
         loc[i] = canvas -> background_color;
     }
 }
