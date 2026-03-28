@@ -281,6 +281,14 @@ void animate_set_animation_params(struct sprite_placement* sprite_placement,
                                   ssize_t vx, ssize_t vy,
                                   ssize_t ax, ssize_t ay){
     // TODO
+    //prevent a null sprite_placement destory the code
+    if (sprite_placement == NULL){
+        return;
+    }
+    sprite_placement -> vx = vx;
+    sprite_placement -> vy = vy;
+    sprite_placement -> ax = ax;
+    sprite_placement -> ay = ay;
 }
 
 void animate_destroy_canvas(struct canvas* canvas){
