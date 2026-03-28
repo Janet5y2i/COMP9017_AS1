@@ -186,6 +186,14 @@ struct sprite* animate_create_rectangle(size_t width, size_t height,
 bool animate_destroy_sprite(struct sprite* sprite) {
     // TODO
 
+    if (sprite -> cnt > 0){
+        return 0;
+    }
+
+    //free pixels first as we create a space for it when create a sprite (animate_create_rectangle/circle)
+    free(sprite -> pixels);
+    free(sprite);
+
     return 1;
 }
 
@@ -277,6 +285,12 @@ void animate_set_animation_params(struct sprite_placement* sprite_placement,
 
 void animate_destroy_canvas(struct canvas* canvas){
     // TODO
+    
+    while (canvas -> head != NULL) {
+        animate_destroy_placement(canvas -> head);
+    }
+    
+    free(canvas);
 }
 
 size_t animate_frame_size_bytes(struct canvas* canvas){
