@@ -14,8 +14,8 @@
 #define OUTPUT_FILE "simple.dat"
 
 int main(int argc, char** argv) {
-    struct canvas* canvas = animate_create_canvas(10, 10, animate_color_argb(0, 0, 0, 0));
-    struct sprite* rect = animate_create_rectangle(3, 6, animate_color_argb(0,255,255,0), 1);
+    struct canvas* canvas = animate_create_canvas(8, 8, animate_color_argb(0, 0, 0, 0));
+    struct sprite* rect = animate_create_rectangle(3, 6, animate_color_argb(255,255,255,0), 1);
 
     struct sprite_placement* prect1 = animate_place_sprite(canvas, rect, 0, 0);
     struct sprite_placement* prect2 = animate_place_sprite(canvas, rect, 2, 1);
