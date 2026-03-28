@@ -276,7 +276,7 @@ void animate_generate_frame(const struct canvas* canvas, size_t frame,
     }
 
     //calculate what is the time right now
-    float t = frame/frame_rate;
+    float t = (float)frame/frame_rate;
     struct sprite_placement* current = canvas -> head;
     while (current != NULL){
         ssize_t new_x = (current -> x) + (current -> vx) * t + (current -> ax) * t *t / 2;
@@ -293,8 +293,8 @@ void animate_generate_frame(const struct canvas* canvas, size_t frame,
                 color_t pixel_color = current -> sprite -> pixels[sprite_index];
 
                 ////calculate the absolute location in the loc(buf)
-                size_t abs_x = new_x + sx;
-                size_t abs_y = new_y + sx;
+                ssize_t abs_x = new_x + sx;
+                ssize_t abs_y = new_y + sy;
 
                 if(( (abs_x >= 0 && abs_x < canvas -> width) && (abs_y >= 0 && abs_y < canvas -> height))){
                     if((pixel_color >> 24) != 0){
