@@ -185,6 +185,7 @@ struct sprite* animate_create_rectangle(size_t width, size_t height,
 
 bool animate_destroy_sprite(struct sprite* sprite) {
     // TODO
+
     return 1;
 }
 
@@ -197,11 +198,9 @@ struct sprite_placement* animate_place_sprite(struct canvas* canvas,
         printf("Memory allocate uncessefully");
         return NULL;
     }
+    // if the sprite in use, break the 
     aps -> sprite = sprite;
-    if ( sprite -> cnt > 0){
-        return NULL;
-    }
-    sprite -> cnt++;
+
     aps -> canvas = canvas;
     aps -> x = x;
     aps -> y = y;
@@ -219,7 +218,7 @@ struct sprite_placement* animate_place_sprite(struct canvas* canvas,
 
 
     }
-
+    sprite -> cnt += 1;
     return aps;
 }
 
@@ -241,6 +240,33 @@ void animate_placement_bottom(struct sprite_placement* sprite_placement){
 
 void animate_destroy_placement(struct sprite_placement* sprite_placement){
     // TODO
+    //if no placement
+    if( sprite_placement == NULL){
+        return;
+    } else if (sprite_placement -> canvas -> head == sprite_placement -> canvas -> tail) {
+    //if the is only one placement
+         sprite_placement -> canvas -> head = NULL;
+         sprite_placement -> canvas -> tail = NULL;
+    //when destroy the last one, set the prev's next as null
+    } else if (sprite_placement -> next == NULL){
+        sprite_placement -> prev -> next = NULL;
+        sprite_placement -> canvas -> tail = sprite_placement -> prev ;
+    } else if (sprite_placement -> prev == NULL){
+    //when destroy the first one, set the next's prev as null
+        sprite_placement -> next -> prev = NULL;
+        sprite_placement -> canvas -> head = sprite_placement -> next ;
+    } else {
+        sprite_placement -> prev -> next = sprite_placement -> next ;
+        sprite_placement -> next -> prev = sprite_placement -> prev ;
+    }
+    
+    //update the sprite's using cnt
+    sprite_placement -> sprite -> cnt--;
+
+    //free the memory
+    free(sprite_placement);
+
+
 }
 
 void animate_set_animation_params(struct sprite_placement* sprite_placement,
