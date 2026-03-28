@@ -235,10 +235,58 @@ struct sprite_placement* animate_place_sprite(struct canvas* canvas,
 
 void animate_placement_up(struct sprite_placement* sprite_placement){
     // TODO COMP9017
+    if (sprite_placement == NULL || sprite_placement -> canvas -> tail == sprite_placement){
+        return;
+    }
+    
+    struct sprite_placement* p = sprite_placement -> prev;
+    struct sprite_placement* n = sprite_placement -> next;
+    struct sprite_placement* nn = n -> next;
+
+    // when sprite_placement is tail
+    if (nn != NULL){
+        nn -> prev = sprite_placement;  
+    } else {
+        sprite_placement -> canvas -> tail = sprite_placement;
+    }
+    sprite_placement -> next = nn;
+    
+    
+    if(p != NULL){
+        p -> next = n;
+    } else {
+        sprite_placement -> canvas -> head = n;
+    }
+    n -> prev = p;
+    sprite_placement -> prev = n;
+    n -> next = sprite_placement;
 }
 
 void animate_placement_down(struct sprite_placement* sprite_placement){
     // TODO COMP9017
+    if (sprite_placement == NULL || sprite_placement -> canvas -> head == sprite_placement){
+        return;
+    }
+    
+    struct sprite_placement* p = sprite_placement -> prev;
+    struct sprite_placement* pp = p -> prev;
+    struct sprite_placement* n = sprite_placement -> next;
+
+    // when sprite_placement is tail
+    if (pp != NULL){
+        pp -> next = sprite_placement;  
+    } else {
+        sprite_placement -> canvas -> head = sprite_placement;
+    }
+    sprite_placement -> prev = pp;
+    sprite_placement -> next = p;
+    p -> prev = sprite_placement;
+    p -> next = n;
+    if(n != NULL){
+        n -> prev = p;
+    } else {
+        sprite_placement -> canvas -> tail = p;
+    }
 }
 
 void animate_placement_top(struct sprite_placement* sprite_placement){
