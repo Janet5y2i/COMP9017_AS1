@@ -127,9 +127,14 @@ struct sprite* animate_create_circle(size_t radius, color_t c, bool filled) {
     } else {
         for (size_t x = 0; x < acc -> width; x++){
             for(size_t y = 0 ; y < acc -> height; y++){
-                if (abs(radius - x) * abs(radius - x) + abs(radius - y) * abs(radius - y) <= radius*radius){
+                size_t dx = (size_t) x - size_t (radius);
+                size_t dy = (size_t) y - size_t (radius);
+                if ( dx * dx + dy * dy <= (size_t) radius * radius){
                     
-                    acc -> pixels[x + y] = acc -> color;
+                    acc -> pixels[y * acc->width + x] = c;
+                }
+                else {
+                    acc -> pixels[y * acc->width + x] = x;
                 }
             }
         }
