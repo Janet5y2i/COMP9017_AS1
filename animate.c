@@ -11,6 +11,7 @@ struct sprite {
     color_t color;
     color_t *pixels;
     bool filled;
+    int cnt;
 
 };
 
@@ -25,7 +26,7 @@ struct sprite_placement {
     ssize_t ax;
     ssize_t ay;
     struct sprite_placement *prev;
-    struct sprite_placemet *next;
+    struct sprite_placement *next;
 };
 
 struct canvas {
@@ -128,14 +129,15 @@ struct sprite* animate_create_circle(size_t radius, color_t c, bool filled) {
     } else {
         for (size_t x = 0; x < acc -> width; x++){
             for(size_t y = 0 ; y < acc -> height; y++){
+                size_t index = y * acc -> width + x;
                 ssize_t dx = (ssize_t) x - (ssize_t) radius;
                 ssize_t dy = (ssize_t) y - (ssize_t) radius;
                 if ( dx * dx + dy * dy <= (size_t) radius * radius){
                     
-                    acc -> pixels[y * acc->width + x] = c;
+                    acc -> pixels[index] = c;
                 }
                 else {
-                    acc -> pixels[y * acc->width + x] = 0;
+                    acc -> pixels[index] = 0;
                 }
             }
         }
@@ -190,7 +192,34 @@ struct sprite_placement* animate_place_sprite(struct canvas* canvas,
                                               struct sprite* sprite,
                                               ssize_t x, ssize_t y) {
     // TODO
-    return NULL;
+    struct sprite_placement* aps = malloc(sizeof(struct sprite_placement));
+    if (aps == NULL){
+        printf("Memory allocate uncessefully");
+        return NULL;
+    }
+    aps -> sprite = sprite;
+    if ( sprite -> cnt > 0){
+        return NULL;
+    }
+    aps -> canvas = canvas;
+    aps -> x = x;
+    aps -> y = y;
+
+    if (canvas -> head == 0) {
+        canvas -> head = aps;
+        canvas -> tail = aps;
+        aps -> next = NULL;
+        aps -> prev = NULL;
+    } else {
+        aps -> prev = canvas -> tail;
+        canvas -> tail -> next = aps;
+        canvas -> tail = aps;
+        aps -> next = NULL;
+
+
+    }
+
+    return aps;
 }
 
 void animate_placement_up(struct sprite_placement* sprite_placement){
