@@ -201,6 +201,7 @@ struct sprite_placement* animate_place_sprite(struct canvas* canvas,
     if ( sprite -> cnt > 0){
         return NULL;
     }
+    sprite -> cnt++;
     aps -> canvas = canvas;
     aps -> x = x;
     aps -> y = y;
@@ -260,17 +261,55 @@ size_t animate_frame_size_bytes(struct canvas* canvas){
     return size;
 }
 
+    
+
 void animate_generate_frame(const struct canvas* canvas, size_t frame,
                             size_t frame_rate, void* buf) {
     // TODO
-    //size_t *data = buf;
+    //a pointer buf point to the space create in main.c (void* data = malloc(frame_size_bytes);)
     color_t* loc = (color_t*)buf;
+    //total pixal of the input canvas
     size_t pixal = canvas -> height * canvas -> width;
-    //for (buf; buf < size; buf++)
-    //    *buf = canvas -> background_color;
+    //fill the background_color to all the space in buf(loc)
     for (size_t i = 0; i < pixal; i++){
         loc[i] = canvas -> background_color;
     }
+
+    //calculate what is the time right now
+    float t = frame/frame_rate;
+    struct sprite_placement* current = canvas -> head;
+    while (current != NULL){
+        ssize_t new_x = (current -> x) + (current -> vx) * t + (current -> ax) * t *t / 2;
+        ssize_t new_y = (current -> y) + (current -> vy) * t + (current -> ay) * t *t / 2;
+
+        //go through all pixal in the sprite
+        for (size_t sy = 0; sy < current -> sprite -> height; sy++){
+            for (size_t sx = 0; sx < current -> sprite -> width; sx++){
+                
+                //the location of the sprite right now
+                size_t sprite_index = sy * current -> sprite -> width + sx;
+
+                //color of this localtion
+                color_t pixel_color = current -> sprite -> pixels[sprite_index];
+
+                ////calculate the absolute location in the loc(buf)
+                size_t abs_x = new_x + sx;
+                size_t abs_y = new_y + sx;
+
+                if(( (abs_x >= 0 && abs_x < canvas -> width) && (abs_y >= 0 && abs_y < canvas -> height))){
+                    if((pixel_color >> 24) != 0){
+                        size_t canvas_index = (size_t)abs_y * canvas -> width + (size_t)abs_x;
+                        loc[canvas_index] = pixel_color | 0xFF000000;
+                    }
+                }
+            }
+        }
+        current = current -> next;
+    }
+    
+
+
+
 }
 
 // Optional extension
