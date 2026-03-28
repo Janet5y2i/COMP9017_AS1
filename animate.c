@@ -98,6 +98,9 @@ struct canvas* animate_create_canvas(size_t height, size_t width,
     cv -> height = height;
     cv -> width = width;
     cv -> background_color = background_color;
+    //initialize the head and tail as null
+    cv -> head = NULL;
+    cv -> tail = NULL;
     
     
     
@@ -240,10 +243,44 @@ void animate_placement_down(struct sprite_placement* sprite_placement){
 
 void animate_placement_top(struct sprite_placement* sprite_placement){
     // TODO
+    if (sprite_placement == NULL || sprite_placement -> canvas -> tail == sprite_placement){
+        return;
+    } else if (sprite_placement -> canvas -> head == sprite_placement) {
+        sprite_placement -> canvas -> head = sprite_placement -> next;
+        sprite_placement -> next -> prev = NULL;
+    } else {
+        sprite_placement -> prev -> next = sprite_placement -> next;
+        sprite_placement -> next -> prev = sprite_placement -> prev;
+    }
+
+    //place to the tail
+    sprite_placement -> canvas -> tail -> next = sprite_placement;
+    sprite_placement -> prev = sprite_placement -> canvas -> tail;
+    sprite_placement -> canvas -> tail = sprite_placement;
+    sprite_placement -> next = NULL;
+    
+
 }
 
 void animate_placement_bottom(struct sprite_placement* sprite_placement){
     // TODO
+    //if it already is canvas's head => do nothing 
+    if (sprite_placement == NULL || sprite_placement -> canvas -> head == sprite_placement){
+        return;
+    } else if (sprite_placement -> canvas -> tail == sprite_placement){
+        //reset the tail
+        sprite_placement -> canvas -> tail = sprite_placement -> prev;
+        sprite_placement -> prev -> next = NULL;
+    } else {
+        sprite_placement -> prev -> next = sprite_placement -> next;
+        sprite_placement -> next -> prev = sprite_placement -> prev;
+    }
+    
+    sprite_placement -> next = sprite_placement -> canvas -> head;
+    sprite_placement -> canvas -> head -> prev = sprite_placement;
+    sprite_placement -> canvas -> head = sprite_placement;
+    sprite_placement -> prev = NULL;
+
 }
 
 void animate_destroy_placement(struct sprite_placement* sprite_placement){
