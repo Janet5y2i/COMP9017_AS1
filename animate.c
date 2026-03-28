@@ -39,6 +39,7 @@ struct canvas {
 };
 
 
+
 /* This is the header structure that we can expect to find at position 0 in a bitmap file. */
 struct bitmap_header {
     uint8_t  magic[2];          // Expect {'B', 'M'}
@@ -127,14 +128,14 @@ struct sprite* animate_create_circle(size_t radius, color_t c, bool filled) {
     } else {
         for (size_t x = 0; x < acc -> width; x++){
             for(size_t y = 0 ; y < acc -> height; y++){
-                size_t dx = (size_t) x - size_t (radius);
-                size_t dy = (size_t) y - size_t (radius);
+                ssize_t dx = (ssize_t) x - (ssize_t) radius;
+                ssize_t dy = (ssize_t) y - (ssize_t) radius;
                 if ( dx * dx + dy * dy <= (size_t) radius * radius){
                     
                     acc -> pixels[y * acc->width + x] = c;
                 }
                 else {
-                    acc -> pixels[y * acc->width + x] = x;
+                    acc -> pixels[y * acc->width + x] = 0;
                 }
             }
         }
@@ -192,12 +193,23 @@ void animate_destroy_canvas(struct canvas* canvas){
 
 size_t animate_frame_size_bytes(struct canvas* canvas){
     // TODO
-    return 0;
+    size_t height = canvas -> height;
+    size_t width = canvas -> width;
+    size_t size = height * width * sizeof(color_t);
+    return size;
 }
 
 void animate_generate_frame(const struct canvas* canvas, size_t frame,
                             size_t frame_rate, void* buf) {
     // TODO
+    //size_t *data = buf;
+    color_t* loc = (color_t*)buf;
+    size_t pixal = canvas -> height * canvas -> width;
+    //for (buf; buf < size; buf++)
+    //    *buf = canvas -> background_color;
+    for (size_t i ; i < pixal; i++){
+        loc[i] = canvas -> background_color;
+    }
 }
 
 // Optional extension
