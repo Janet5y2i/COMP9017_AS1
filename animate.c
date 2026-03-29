@@ -109,6 +109,11 @@ struct canvas* animate_create_canvas(size_t height, size_t width,
 
 struct sprite* animate_create_sprite(const char* file) {
     // TODO
+
+    FILE *fp = fopen(file, "r");
+    if (fp == NULL){
+        return NULL;
+    }
     return NULL;
 }
 
@@ -399,7 +404,8 @@ size_t animate_frame_size_bytes(struct canvas* canvas){
 void animate_generate_frame(const struct canvas* canvas, size_t frame,
                             size_t frame_rate, void* buf) {
     // TODO
-    //a pointer buf point to the space create in main.c (void* data = malloc(frame_size_bytes);)
+    //a pointer buf point to the space create at heap in main.c (void* data = malloc(frame_size_bytes);)
+    //size = canvas_size_byte
     color_t* loc = (color_t*)buf;
     //total pixal of the input canvas
     size_t pixal = canvas -> height * canvas -> width;
