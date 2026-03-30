@@ -91,7 +91,7 @@ struct canvas* animate_create_canvas(size_t height, size_t width,
     struct canvas* cv = malloc(sizeof(struct canvas));
     
     if ( cv == NULL){
-        printf("Memory allocate uncessefully");
+        //printf("Memory allocate uncessefully");
         return NULL;
     }
 
@@ -110,11 +110,53 @@ struct canvas* animate_create_canvas(size_t height, size_t width,
 struct sprite* animate_create_sprite(const char* file) {
     // TODO
 
-    FILE *fp = fopen(file, "r");
+    FILE *fp = fopen(file, "rb");
     if (fp == NULL){
         return NULL;
     }
-    return NULL;
+
+    //create two struct to read the header of the bitmap file
+    struct bitmap_header header;
+    struct bitmapv5_header v5_header;
+    //read the header of the bitmap file
+    fread(&header, sizeof(struct bitmap_header), 1, fp);
+    
+    //check if the magic is B and M
+    if ( (header.magic[0] != 'B') || (header.magic[1] != 'M')){
+        fclose(fp);
+        return NULL;
+    }
+
+    fread(&v5_header, sizeof(struct bitmapv5_header), 1, fp);
+
+    struct sprite* sp = malloc(sizeof(struct sprite));
+    if (sp == NULL){
+        fclose(fp);
+        return NULL;
+    }
+
+    sp -> width = v5_header.bV5Width;
+    sp -> height = v5_header.bV5Height;
+    sp -> cnt = 0; //initialize the using cnt as 0
+    
+    sp -> pixels = malloc(sp -> width * sp -> height * sizeof(color_t));
+    if (sp -> pixels == NULL){
+        free(sp);
+        fclose(fp);
+        return NULL;
+    }
+
+    fseek(fp, header.pixel_offset, SEEK_SET);
+
+    for (ssize_t y = sp -> height - 1; y >= 0; y--){
+        //the start location of the yth row in the bitmap file
+        color_t* row_start = &sp -> pixels[y * sp -> width];
+
+        //read the color of each pixal in the yth row and store in the sprite's pixels from address row_start
+        fread(row_start, sizeof(color_t), sp -> width, fp);
+    }
+    fclose(fp);
+    return sp;
 }
 
 //For circle, the width and height should be the same, which are equal to two times of radius
@@ -123,16 +165,18 @@ struct sprite* animate_create_circle(size_t radius, color_t c, bool filled) {
     struct sprite* acc = malloc(sizeof(struct sprite));
     
     if (acc == NULL){
-        printf("Memory allocate uncessefully");
+        //printf("Memory allocate uncessefully");
         return NULL;
     }
     acc -> width = radius * 2;
     acc -> height = radius * 2;
     acc -> color = c;
+    acc ->cnt = 0; //initialize the using cnt as 0
     acc -> filled = filled;
     acc -> pixels = malloc(acc->width * acc->height * sizeof(color_t));
     if (acc-> pixels == NULL){
-        printf("Memory allocate uncessefully");
+        //printf("Memory allocate uncessefully");
+        free(acc);
         return NULL;
     } else {
         for (size_t x = 0; x < acc -> width; x++){
@@ -158,7 +202,7 @@ struct sprite* animate_create_rectangle(size_t width, size_t height,
     // TODO
     struct sprite* acr = malloc(sizeof(struct sprite));
     if (acr == NULL){
-        printf("Memory allocate uncessefully");
+        //printf("Memory allocate uncessefully");
         return NULL;
     }
 
@@ -166,9 +210,11 @@ struct sprite* animate_create_rectangle(size_t width, size_t height,
     acr -> height = height;
     acr -> color = c;
     acr -> filled = filled;
+    acr ->cnt = 0; //initialize the using cnt as 0
     acr -> pixels = malloc(acr -> width * acr -> height *sizeof(color_t));
     if (acr -> pixels == NULL){
-        printf("Memory allocate uncessefully");
+        //printf("Memory allocate uncessefully");
+        free(acr);
         return NULL;
     }
 
@@ -211,7 +257,7 @@ struct sprite_placement* animate_place_sprite(struct canvas* canvas,
     // TODO
     struct sprite_placement* aps = malloc(sizeof(struct sprite_placement));
     if (aps == NULL){
-        printf("Memory allocate uncessefully");
+        //printf("Memory allocate uncessefully");
         return NULL;
     }
     // if the sprite in use, break the 
@@ -234,7 +280,7 @@ struct sprite_placement* animate_place_sprite(struct canvas* canvas,
 
 
     }
-    sprite -> cnt += 1;
+    sprite -> cnt++;
     return aps;
 }
 
