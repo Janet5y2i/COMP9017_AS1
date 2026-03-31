@@ -14,7 +14,7 @@ struct canvas {
 };
 
 int main(int argc, char** argv) {
-    size_t h = 8;
+    size_t h = 10;
     size_t w = 10;
     color_t bg = animate_color_argb(255, 0, 0, 0);
 
@@ -31,6 +31,20 @@ int main(int argc, char** argv) {
         return 1;
     }
     
+
+    // 2. to validate the properties of the canvas
+    // expected size = height * width * sizeof(color_t)
+    size_t expected_size = h * w * sizeof(color_t);
+    size_t frame_size_bytes = animate_frame_size_bytes(canvas);
+
+    if (expected_size != frame_size_bytes) {
+        
+        fprintf(stderr, "Error: The canvas size not match");
+        animate_destroy_canvas(canvas);
+        return 1;
+        
+    }
+
     animate_destroy_canvas(canvas);
 
     return 0;

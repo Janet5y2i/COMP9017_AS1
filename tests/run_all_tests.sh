@@ -34,26 +34,29 @@ fi
 # Clean up the executable
 rm -f test_create_canvas
 
-echo "=== Second Test: test_canvas_size ==="
-gcc -g -I.. test_canvas_size.c ../animate.o -o test_canvas_size
+
+
+# The second case
+echo "=== Second Test: test_create_circle ==="
+gcc -g -I.. test_create_circle.c ../animate.o -o test_create_circle
 
 if [ $? -ne 0 ]; then
-    echo -e "${RED}Test - test_canvas_size failed to compile!${NC}"
+    echo -e "${RED}Test - test_create_circle failed to compile!${NC}"
     exit 1
 fi
 
 # 2. Using Valgrind to check for memory leaks and errors
 echo "Checking for memory leaks and errors..."
-valgrind --leak-check=full --error-exitcode=1 ./test_canvas_size > /dev/null 2>&1
+valgrind --leak-check=full --error-exitcode=1 ./test_create_circle > /dev/null 2>&1
 
 
 if [ $? -eq 0 ]; then
-    echo -e "${GREEN}[PASS]${NC} test_canvas_size (Function and memory are both normal)"
+    echo -e "${GREEN}[PASS]${NC} test_create_circle (Function and memory are both normal)"
 else
     echo -e "${RED}[FAIL]${NC} Memory leak or execution error detected!"
     # If failed, run again to display detailed errors
-    valgrind --leak-check=full ./test_canvas_size
+    valgrind --leak-check=full ./test_create_circle
 fi
 
 # Clean up the executable
-rm -f test_canvas_size
+rm -f test_create_circle

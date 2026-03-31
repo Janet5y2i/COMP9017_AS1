@@ -1,0 +1,56 @@
+/**
+ * A simple test file to help you get started
+ */
+
+#include "animate.h"
+
+#include <stdio.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <errno.h>
+#include <string.h>
+#include <stdlib.h>
+
+struct sprite {
+    // TODO
+    size_t width;
+    size_t height;
+    color_t color;
+    color_t *pixels;
+    bool filled;
+    int cnt;
+
+};
+
+int main(int argc, char** argv) {
+    size_t radius = 5;
+    color_t c = animate_color_argb(255, 0, 0, 255);
+    struct sprite* circle = animate_create_circle(radius, c, 1);
+
+    // 1. create a circle sprite and check if it's created successfully
+    if (circle == NULL) {
+        fprintf(stderr, "Error: Failed to create circle sprite (NULL)\n");
+        return 1;
+    }
+
+    // 2. to validate the properties of the circle sprite
+    // central of the circle should be filled of the color
+    if(circle -> pixels[radius * circle -> width + radius] != c){
+        fprintf(stderr, "Error: The center pixel of the circle is not the expected color\n");
+        animate_destroy_sprite(circle);
+        return 1;
+    }
+
+    // 3. to validate the properties of the circle sprite
+    // the corner of the circle should not be filled of the color
+    if(circle -> pixels[0] == c){
+        fprintf(stderr, "Error: The corner pixel of the circle is filled with the expected color, but it should not be\n");
+        animate_destroy_sprite(circle);
+        return 1;
+    }
+
+    animate_destroy_sprite(circle);
+
+    return 0;
+
+}
