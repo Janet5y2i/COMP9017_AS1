@@ -9,7 +9,7 @@ RED='\033[0;31m'
 NC='\033[0m'
 
 echo "=== Starting Testing ==="
-
+echo "=== First Test: test_create_canvas ==="
 # step1: complie the case
 # -I.. : animate.o is on the last path
 gcc -g -I.. test_create_canvas.c ../animate.o -o test_create_canvas
@@ -34,7 +34,7 @@ fi
 # Clean up the executable
 rm -f test_create_canvas
 
-
+echo "=== Second Test: test_canvas_size ==="
 gcc -g -I.. test_canvas_size.c ../animate.o -o test_canvas_size
 
 if [ $? -ne 0 ]; then
