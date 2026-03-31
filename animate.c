@@ -267,6 +267,11 @@ struct sprite_placement* animate_place_sprite(struct canvas* canvas,
     aps -> x = x;
     aps -> y = y;
 
+    aps->vx = 0; 
+    aps->vy = 0;
+    aps->ax = 0;
+    aps->ay = 0;
+    
     if (canvas -> head == 0) {
         canvas -> head = aps;
         canvas -> tail = aps;
