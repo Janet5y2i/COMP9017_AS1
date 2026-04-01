@@ -50,8 +50,8 @@ echo "=== Case3: check for the pixel data of the circle ==="
 ./test_create_circle && xxd -g4 test_create_circle.dat > circle_actual.hex
 
 # check if the expected file exist
-if [ ! -f "circle_expected.hex" ]; then
-    echo -e "${RED}[FAIL]${NC} No such file circle_expected.hex"
+if [ ! -f "./expected_outputs/circle_expected.hex" ]; then
+    echo -e "${RED}[FAIL]${NC} No such file ./expected_outputs/circle_expected.hex"
     exit 1
 fi
 
@@ -62,13 +62,13 @@ if [ ! -f "circle_actual.hex" ]; then
 fi
 
 # compare to the two files
-diff circle_actual.hex circle_expected.hex > /dev/null
+diff circle_actual.hex ./expected_outputs/circle_expected.hex > /dev/null
 
 if [ $? -eq 0 ]; then
     echo -e "${GREEN}[PASS]${NC} Pass animate_place_sprite test"
 else
     echo -e "${RED}[FAIL]${NC} Pixel content mismatch"
-    diff -y --suppress-common-lines circle_actual.hex circle_expected.hex | head -n 10
+    diff -y --suppress-common-lines circle_actual.hex ./expected_outputs/circle_expected.hex | head -n 10
 fi
 
 # 2. Using Valgrind to check for memory leaks and errors
@@ -105,8 +105,8 @@ fi
 ./test_create_rectangle_filled && xxd -g4 test_create_rectangle_filled.dat > rectangle_filled_actual.hex
 
 # check if the expected file exist
-if [ ! -f "rectangle_filled_expected.hex" ]; then
-    echo -e "${RED}[FAIL]${NC} No such file rectangle_filled_expected.hex"
+if [ ! -f "./expected_outputs/rectangle_filled_expected.hex" ]; then
+    echo -e "${RED}[FAIL]${NC} No such file ./expected_outputs/rectangle_filled_expected.hex"
     exit 1
 fi
 
@@ -117,13 +117,13 @@ if [ ! -f "rectangle_filled_actual.hex" ]; then
 fi
 
 # compare to the two files
-diff rectangle_filled_actual.hex rectangle_filled_expected.hex > /dev/null
+diff rectangle_filled_actual.hex ./expected_outputs/rectangle_filled_expected.hex > /dev/null
 
 if [ $? -eq 0 ]; then
     echo -e "${GREEN}[PASS]${NC} Pass animate_place_sprite test"
 else
     echo -e "${RED}[FAIL]${NC} Pixel content mismatch"
-    diff -y --suppress-common-lines rectangle_filled_actual.hex rectangle_filled_expected.hex | head -n 10
+    diff -y --suppress-common-lines rectangle_filled_actual.hex ./expected_outputs/rectangle_filled_expected.hex | head -n 10
 fi
 
 # 2. Using Valgrind to check for memory leaks and errors
@@ -163,8 +163,8 @@ fi
 ./test_create_rectangle_empty && xxd -g4 test_create_rectangle_empty.dat > rectangle_empty_actual.hex
 
 # check if the expected file exist
-if [ ! -f "rectangle_empty_expected.hex" ]; then
-    echo -e "${RED}[FAIL]${NC} No such file rectangle_empty_expected.hex"
+if [ ! -f "./expected_outputs/rectangle_empty_expected.hex" ]; then
+    echo -e "${RED}[FAIL]${NC} No such file ./expected_outputs/rectangle_empty_expected.hex"
     exit 1
 fi
 
@@ -175,7 +175,7 @@ if [ ! -f "rectangle_empty_actual.hex" ]; then
 fi
 
 # compare to the two files
-diff rectangle_empty_actual.hex rectangle_empty_expected.hex > /dev/null
+diff rectangle_empty_actual.hex ./expected_outputs/rectangle_empty_expected.hex > /dev/null
 
 if [ $? -eq 0 ]; then
     echo -e "${GREEN}[PASS]${NC} Pass animate_place_sprite test"
@@ -234,13 +234,13 @@ if [ ! -f "layer_actual.hex" ]; then
 fi
 
 # compare to the two files
-diff layer_actual.hex layer_expected.hex > /dev/null
+diff layer_actual.hex ./expected_outputs/layer_expected.hex > /dev/null
 
 if [ $? -eq 0 ]; then
     echo -e "${GREEN}[PASS]${NC} Pass layer test"
 else
     echo -e "${RED}[FAIL]${NC} Pixel content mismatch"
-    diff -y --suppress-common-lines layer_actual.hex layer_expected.hex | head -n 10
+    diff -y --suppress-common-lines layer_actual.hex ./expected_outputs/layer_expected.hex | head -n 10
 fi
 
 
@@ -262,13 +262,13 @@ if [ ! -f "layer_top_actual.hex" ]; then
 fi
 
 # compare to the two files
-diff layer_top_actual.hex layer_top_expected.hex > /dev/null
+diff layer_top_actual.hex ./expected_outputs/layer_top_expected.hex > /dev/null
 
 if [ $? -eq 0 ]; then
     echo -e "${GREEN}[PASS]${NC} Pass top layer test"
 else
     echo -e "${RED}[FAIL]${NC} Pixel content mismatch"
-    diff -y --suppress-common-lines layer_top_actual.hex layer_top_expected.hex | head -n 10
+    diff -y --suppress-common-lines layer_top_actual.hex ./expected_outputs/layer_top_expected.hex | head -n 10
 fi
 
 
@@ -291,13 +291,13 @@ if [ ! -f "layer_down_actual.hex" ]; then
 fi
 
 # compare to the two files
-diff layer_down_actual.hex layer_down_expected.hex > /dev/null
+diff layer_down_actual.hex ./expected_outputs/layer_down_expected.hex > /dev/null
 
 if [ $? -eq 0 ]; then
     echo -e "${GREEN}[PASS]${NC} Pass down layer test"
 else
     echo -e "${RED}[FAIL]${NC} Pixel content mismatch"
-    diff -y --suppress-common-lines layer_down_actual.hex layer_down_expected.hex | head -n 10
+    diff -y --suppress-common-lines layer_down_actual.hex ./expected_outputs/layer_down_expected.hex | head -n 10
 fi
 
 
@@ -320,13 +320,13 @@ if [ ! -f "layer_up_actual.hex" ]; then
 fi
 
 # compare to the two files
-diff layer_up_actual.hex layer_up_expected.hex > /dev/null
+diff layer_up_actual.hex ./expected_outputs/layer_up_expected.hex > /dev/null
 
 if [ $? -eq 0 ]; then
     echo -e "${GREEN}[PASS]${NC} Pass up layer test"
 else
     echo -e "${RED}[FAIL]${NC} Pixel content mismatch"
-    diff -y --suppress-common-lines layer_up_actual.hex layer_up_expected.hex | head -n 10
+    diff -y --suppress-common-lines layer_up_actual.hex ./expected_outputs/layer_up_expected.hex | head -n 10
 fi
 
 
@@ -349,13 +349,13 @@ if [ ! -f "layer_bottom_actual.hex" ]; then
 fi
 
 # compare to the two files
-diff layer_bottom_actual.hex layer_bottom_expected.hex > /dev/null
+diff layer_bottom_actual.hex ./expected_outputs/layer_bottom_expected.hex > /dev/null
 
 if [ $? -eq 0 ]; then
     echo -e "${GREEN}[PASS]${NC} Pass bottom layer test"
 else
     echo -e "${RED}[FAIL]${NC} Pixel content mismatch"
-    diff -y --suppress-common-lines layer_bottom_actual.hex layer_bottom_expected.hex | head -n 10
+    diff -y --suppress-common-lines layer_bottom_actual.hex ./expected_outputs/layer_bottom_expected.hex | head -n 10
 fi
 
 
@@ -405,8 +405,8 @@ fi
 ./test_animate && xxd -g4 test_animate_t0.dat > test_animate_t0_actual.hex
 
 # check if the expected file exist
-if [ ! -f "test_animate_t0_expected.hex" ]; then
-    echo -e "${RED}[FAIL]${NC} No such file test_animate_t0_expected.hex"
+if [ ! -f "./expected_outputs/test_animate_t0_expected.hex" ]; then
+    echo -e "${RED}[FAIL]${NC} No such file ./expected_outputs/test_animate_t0_expected.hex"
     exit 1
 fi
 
@@ -417,13 +417,13 @@ if [ ! -f "test_animate_t0_actual.hex" ]; then
 fi
 
 # compare to the two files
-diff test_animate_t0_actual.hex test_animate_t0_expected.hex > /dev/null
+diff test_animate_t0_actual.hex ./expected_outputs/test_animate_t0_expected.hex > /dev/null
 
 if [ $? -eq 0 ]; then
     echo -e "${GREEN}[PASS]${NC} Pass animate_place_sprite test"
 else
     echo -e "${RED}[FAIL]${NC} Pixel content mismatch"
-    diff -y --suppress-common-lines test_animate_t0_actual.hex test_animate_t0_expected.hex | head -n 10
+    diff -y --suppress-common-lines test_animate_t0_actual.hex ./expected_outputs/test_animate_t0_expected.hex | head -n 10
 fi
 
 
@@ -431,7 +431,7 @@ fi
 ./test_animate && xxd -g4 test_animate_t1.dat > test_animate_t1_actual.hex
 
 # check if the expected file exist
-if [ ! -f "test_animate_t1_expected.hex" ]; then
+if [ ! -f "./expected_outputs/test_animate_t1_expected.hex" ]; then
     echo -e "${RED}[FAIL]${NC} No such file test_animate_t1_expected.hex"
     exit 1
 fi
@@ -443,13 +443,13 @@ if [ ! -f "test_animate_t1_actual.hex" ]; then
 fi
 
 # compare to the two files
-diff test_animate_t1_actual.hex test_animate_t1_expected.hex > /dev/null
+diff test_animate_t1_actual.hex ./expected_outputs/test_animate_t1_expected.hex > /dev/null
 
 if [ $? -eq 0 ]; then
     echo -e "${GREEN}[PASS]${NC} Pass animate_place_sprite test"
 else
     echo -e "${RED}[FAIL]${NC} Pixel content mismatch"
-    diff -y --suppress-common-lines test_animate_t1_actual.hex test_animate_t1_expected.hex | head -n 10
+    diff -y --suppress-common-lines test_animate_t1_actual.hex ./expected_outputs/test_animate_t1_expected.hex | head -n 10
 fi
 
 

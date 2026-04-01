@@ -83,14 +83,16 @@ int main(int argc, char** argv) {
 
     // then check if the animate_placement_top can move the first rectangle to the top layer
     animate_placement_top(placement);
-
+    //generate the frame again after change the layer of the first rectangle
+    animate_generate_frame(canvas, 0, 1, data); 
     FILE* fp1 = fopen("test_layer_top.dat", "wb");
     fwrite(data, 1, frame_size_bytes, fp1);
     fclose(fp1);
 
-    // then check if the animate_placement_down can move the first rectangle to the down layer
+    // then check if the animate_placement_down can move the second rectangle to the down layer
     animate_placement_down(placement);
-
+    //generate the frame again after change the layer of the first rectangle
+    animate_generate_frame(canvas, 0, 1, data); 
     FILE* fp2 = fopen("test_layer_down.dat", "wb");
     fwrite(data, 1, frame_size_bytes, fp2);
     fclose(fp2);
@@ -98,10 +100,20 @@ int main(int argc, char** argv) {
 
     // then check if the animate_placement_up can move the first rectangle to the up layer
     animate_placement_up(placement);
-
+    //generate the frame again after change the layer of the first rectangle
+    animate_generate_frame(canvas, 0, 1, data); 
     FILE* fp3 = fopen("test_layer_up.dat", "wb");
     fwrite(data, 1, frame_size_bytes, fp3);
     fclose(fp3);
+
+
+    // then check if the animate_placement_buttom can move the second rectangle to the up layer
+    animate_placement_bottom(placement);
+    //generate the frame again after change the layer of the first rectangle
+    animate_generate_frame(canvas, 0, 1, data); 
+    FILE* fp4 = fopen("test_layer_bottom.dat", "wb");
+    fwrite(data, 1, frame_size_bytes, fp4);
+    fclose(fp4);
 
 
 
