@@ -25,8 +25,8 @@ struct sprite {
 };
 
 int main(int argc, char** argv) {
-    size_t radius = 1;
-    color_t c = animate_color_argb(255, 0, 0, 255);
+    size_t radius = 2;
+    color_t c = animate_color_argb(255, 255, 255, 255);
     struct sprite* circle = animate_create_circle(radius, c, 1);
 
     // 1. create a circle sprite and check if it's created successfully
@@ -53,8 +53,8 @@ int main(int argc, char** argv) {
 
 
     // 4. create a canvas and check the result
-    color_t black = animate_color_argb(255, 0, 0, 0);
-    struct canvas* canvas = animate_create_canvas(4, 4, black);
+    color_t canvas_color = animate_color_argb(0, 0, 0, 0);
+    struct canvas* canvas = animate_create_canvas(8, 8, canvas_color);
     if (canvas == NULL) {
         animate_destroy_sprite(circle);
         return 1;

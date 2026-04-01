@@ -47,7 +47,7 @@ fi
 
 
 echo "=== Third Test: check for the pixel data of the circle ==="
-xxd -g4 ./tests/test_create_circle.dat > ./tests/circle_answer.hex
+xxd -g4 test_create_circle.dat > circle_answer.hex
 
 # 2. Using Valgrind to check for memory leaks and errors
 echo "Checking for memory leaks and errors..."
@@ -63,4 +63,6 @@ else
 fi
 
 # Clean up the executable
-rm -f test_create_circle
+rm -f ./tests/test_create_circle
+#rm -f ./tests/test_create_circle.dat
+#rm -f ./tests/circle_answer.hex

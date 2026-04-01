@@ -168,8 +168,8 @@ struct sprite* animate_create_circle(size_t radius, color_t c, bool filled) {
         //printf("Memory allocate uncessefully");
         return NULL;
     }
-    acc -> width = radius * 2;
-    acc -> height = radius * 2;
+    acc -> width = radius * 2 + 1;
+    acc -> height = radius * 2 + 1;
     acc -> color = c;
     acc ->cnt = 0; //initialize the using cnt as 0
     acc -> filled = filled;
