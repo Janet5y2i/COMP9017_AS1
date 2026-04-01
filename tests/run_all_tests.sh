@@ -9,7 +9,7 @@ RED='\033[0;31m'
 NC='\033[0m'
 
 echo "=== Starting Testing ==="
-echo "=== First Test: test_create_canvas ==="
+echo "=== Case1: test_create_canvas ==="
 # step1: complie the case
 # -I.. : animate.o is on the last path
 gcc -g -I.. test_create_canvas.c ../animate.o -o test_create_canvas
@@ -37,7 +37,7 @@ rm -f test_create_canvas
 
 
 # The second case
-echo "=== Second Test: test_create_circle ==="
+echo "=== Case2: test_create_circle ==="
 gcc -g -I.. test_create_circle.c ../animate.o -o test_create_circle
 
 if [ $? -ne 0 ]; then
@@ -46,7 +46,7 @@ if [ $? -ne 0 ]; then
 fi
 
 
-echo "=== Third Test: check for the pixel data of the circle ==="
+echo "=== Case3: check for the pixel data of the circle ==="
 ./test_create_circle && xxd -g4 test_create_circle.dat > circle_actual.hex
 
 # check if the expected file exist
@@ -91,7 +91,7 @@ rm -f circle_actual.hex
 
 
 
-echo "=== Forth Test: check for the pixel data of the rectangle ==="
+echo "=== Case4: check for the pixel data of the rectangle ==="
 
 # The forth case
 gcc -g -I.. test_create_rectangle_filled.c ../animate.o -o test_create_rectangle_filled
@@ -149,7 +149,7 @@ rm -f rectangle_filled_actual.hex
 
 
 
-echo "=== Fifth Test: check for the pixel data of the rectangle ==="
+echo "=== Case5: check for the pixel data of the rectangle ==="
 
 # The fifth case
 gcc -g -I.. test_create_rectangle_empty.c ../animate.o -o test_create_rectangle_empty
@@ -203,3 +203,154 @@ fi
 rm -f test_create_rectangle_empty
 rm -f test_create_rectangle_empty.dat
 rm -f rectangle_empty_actual.hex
+
+
+
+
+
+echo "=== Case6: check for the pixel data of the layer ==="
+
+# The sixth case
+gcc -g -I.. test_layer.c ../animate.o -o test_layer
+
+if [ $? -ne 0 ]; then
+    echo -e "${RED}Test - test_layer failed to compile!${NC}"
+    exit 1
+fi
+
+
+./test_layer && xxd -g4 test_layer.dat > layer_actual.hex
+
+# check if the expected file exist
+if [ ! -f "layer_actual.hex" ]; then
+    echo -e "${RED}[FAIL]${NC} No such file layer_actual.hex"
+    exit 1
+fi
+
+# check if the output exist
+if [ ! -f "layer_actual.hex" ]; then
+    echo -e "${RED}[FAIL]${NC} No output file layer_actual.hex"
+    exit 1
+fi
+
+# compare to the two files
+diff layer_actual.hex layer_expected.hex > /dev/null
+
+if [ $? -eq 0 ]; then
+    echo -e "${GREEN}[PASS]${NC} Pass layer test"
+else
+    echo -e "${RED}[FAIL]${NC} Pixel content mismatch"
+    diff -y --suppress-common-lines layer_actual.hex layer_expected.hex | head -n 10
+fi
+
+
+echo "=== Case7: check for the pixel data of the top layer function ==="
+
+
+./test_layer && xxd -g4 test_layer_top.dat > layer_top_actual.hex
+
+# check if the expected file exist
+if [ ! -f "layer_top_actual.hex" ]; then
+    echo -e "${RED}[FAIL]${NC} No such file layer_top_actual.hex"
+    exit 1
+fi
+
+# check if the output exist
+if [ ! -f "layer_top_actual.hex" ]; then
+    echo -e "${RED}[FAIL]${NC} No output file layer_actual.hex"
+    exit 1
+fi
+
+# compare to the two files
+diff layer_top_actual.hex layer_top_expected.hex > /dev/null
+
+if [ $? -eq 0 ]; then
+    echo -e "${GREEN}[PASS]${NC} Pass top layer test"
+else
+    echo -e "${RED}[FAIL]${NC} Pixel content mismatch"
+    diff -y --suppress-common-lines layer_top_actual.hex layer_top_expected.hex | head -n 10
+fi
+
+
+
+echo "=== Case8: check for the pixel data of the down layer function ==="
+
+
+./test_layer && xxd -g4 test_layer_down.dat > layer_down_actual.hex
+
+# check if the expected file exist
+if [ ! -f "layer_down_actual.hex" ]; then
+    echo -e "${RED}[FAIL]${NC} No such file layer_down_actual.hex"
+    exit 1
+fi
+
+# check if the output exist
+if [ ! -f "layer_down_actual.hex" ]; then
+    echo -e "${RED}[FAIL]${NC} No output file layer_actual.hex"
+    exit 1
+fi
+
+# compare to the two files
+diff layer_down_actual.hex layer_down_expected.hex > /dev/null
+
+if [ $? -eq 0 ]; then
+    echo -e "${GREEN}[PASS]${NC} Pass down layer test"
+else
+    echo -e "${RED}[FAIL]${NC} Pixel content mismatch"
+    diff -y --suppress-common-lines layer_down_actual.hex layer_down_expected.hex | head -n 10
+fi
+
+
+
+echo "=== Case9: check for the pixel data of the up layer function ==="
+
+
+./test_layer && xxd -g4 test_layer_up.dat > layer_up_actual.hex
+
+# check if the expected file exist
+if [ ! -f "layer_up_actual.hex" ]; then
+    echo -e "${RED}[FAIL]${NC} No such file layer_up_actual.hex"
+    exit 1
+fi
+
+# check if the output exist
+if [ ! -f "layer_up_actual.hex" ]; then
+    echo -e "${RED}[FAIL]${NC} No output file layer_up_actual.hex"
+    exit 1
+fi
+
+# compare to the two files
+diff layer_up_actual.hex layer_up_expected.hex > /dev/null
+
+if [ $? -eq 0 ]; then
+    echo -e "${GREEN}[PASS]${NC} Pass up layer test"
+else
+    echo -e "${RED}[FAIL]${NC} Pixel content mismatch"
+    diff -y --suppress-common-lines layer_up_actual.hex layer_up_expected.hex | head -n 10
+fi
+
+
+
+# 2. Using Valgrind to check for memory leaks and errors
+echo "Checking for memory leaks and errors..."
+valgrind --leak-check=full --error-exitcode=1 ./test_layer > /dev/null 2>&1
+
+
+if [ $? -eq 0 ]; then
+    echo -e "${GREEN}[PASS]${NC} test_layer (Function and memory are both normal)"
+else
+    echo -e "${RED}[FAIL]${NC} Memory leak or execution error detected!"
+    # If failed, run again to display detailed errors
+    valgrind --leak-check=full ./test_layer
+fi
+
+
+
+# Clean up the executable
+rm -f test_layer
+rm -f test_layer.dat
+rm -f layer_actual.hex
+rm -f test_layer_top.dat
+rm -f layer_top_actual.hex
+rm -f test_layer_down.dat
+rm -f layer_down_actual.hex

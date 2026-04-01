@@ -11,7 +11,6 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define OUTPUT_FILE "test_layer.dat"
 
 struct sprite {
     // TODO
@@ -76,9 +75,35 @@ int main(int argc, char** argv) {
     void* data = malloc(frame_size_bytes);
     animate_generate_frame(canvas, 0, 1, data);
 
-    FILE* fp = fopen(OUTPUT_FILE, "wb");
+    //first check if the second rectangle cover the first one
+    FILE* fp = fopen("test_layer.dat", "wb");
     fwrite(data, 1, frame_size_bytes, fp);
     fclose(fp);
+
+
+    // then check if the animate_placement_top can move the first rectangle to the top layer
+    animate_placement_top(placement);
+
+    FILE* fp1 = fopen("test_layer_top.dat", "wb");
+    fwrite(data, 1, frame_size_bytes, fp1);
+    fclose(fp1);
+
+    // then check if the animate_placement_down can move the first rectangle to the down layer
+    animate_placement_down(placement);
+
+    FILE* fp2 = fopen("test_layer_down.dat", "wb");
+    fwrite(data, 1, frame_size_bytes, fp2);
+    fclose(fp2);
+
+
+    // then check if the animate_placement_up can move the first rectangle to the up layer
+    animate_placement_up(placement);
+
+    FILE* fp3 = fopen("test_layer_up.dat", "wb");
+    fwrite(data, 1, frame_size_bytes, fp3);
+    fclose(fp3);
+
+
 
     free(data);
     
