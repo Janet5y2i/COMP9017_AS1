@@ -1,0 +1,127 @@
+/**
+ * A simple test file to help you get started
+ */
+
+#include "animate.h"
+
+#include <stdio.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <errno.h>
+#include <string.h>
+#include <stdlib.h>
+
+
+struct sprite {
+    // TODO
+    size_t width;
+    size_t height;
+    color_t color;
+    color_t *pixels;
+    bool filled;
+    int cnt;
+
+};
+
+int main(int argc, char** argv) {
+
+    color_t c = animate_color_argb(255, 255, 255, 255);
+    color_t c1 = animate_color_argb(255, 255, 0, 255);
+    struct sprite* rectangle = animate_create_rectangle(3, 3, c, 1);
+    struct sprite* rectangle2 = animate_create_rectangle(2, 2, c1, 1);
+
+    // 1. create a circle sprite and check if it's created successfully
+    if (rectangle == NULL) {
+        fprintf(stderr, "Error: Failed to create rectangle sprite (NULL)\n");
+        return 1;
+    }
+
+    if (rectangle2 == NULL) {
+        fprintf(stderr, "Error: Failed to create rectangle sprite (NULL)\n");
+        animate_destroy_sprite(rectangle);
+        return 1;
+    }
+
+
+    // 2. check the sprite_placement function and animate_create_circle
+    // if the rectangle is right and can be place on the canvas
+    color_t canvas_color = animate_color_argb(0, 0, 0, 0);
+    struct canvas* canvas = animate_create_canvas(8, 8, canvas_color);
+    if (canvas == NULL) {
+        animate_destroy_sprite(rectangle);
+        animate_destroy_sprite(rectangle2);
+        return 1;
+    }
+
+    struct sprite_placement* placement = animate_place_sprite(canvas, rectangle, 0,0);
+    struct sprite_placement* placement2 = animate_place_sprite(canvas, rectangle2, 0,0);
+
+    if (placement == NULL){
+        animate_destroy_canvas(canvas);
+        animate_destroy_sprite(rectangle);
+        fprintf(stderr, "Error: Failed to place the cirectanglercle sprite on the canvas (NULL)\n");
+        return 1;
+    }
+
+    if (placement2 == NULL){
+        animate_destroy_canvas(canvas);
+        animate_destroy_sprite(rectangle);
+        animate_destroy_sprite(rectangle2);
+        fprintf(stderr, "Error: Failed to place the second rectangle sprite on the canvas (NULL)\n");
+        return 1;
+    }
+    
+    size_t frame_size_bytes = animate_frame_size_bytes(canvas);
+    void* data = malloc(frame_size_bytes);
+    animate_generate_frame(canvas, 0, 1, data);
+
+    //first check if the second rectangle cover the first one
+    FILE* fp = fopen("test_layer.dat", "wb");
+    fwrite(data, 1, frame_size_bytes, fp);
+    fclose(fp);
+
+
+    // then check if the animate_placement_top can move the first rectangle to the top layer
+    animate_placement_top(placement);
+    //generate the frame again after change the layer of the first rectangle
+    animate_generate_frame(canvas, 0, 1, data); 
+    FILE* fp1 = fopen("test_layer_top.dat", "wb");
+    fwrite(data, 1, frame_size_bytes, fp1);
+    fclose(fp1);
+
+    // then check if the animate_placement_down can move the second rectangle to the down layer
+    animate_placement_down(placement);
+    //generate the frame again after change the layer of the first rectangle
+    animate_generate_frame(canvas, 0, 1, data); 
+    FILE* fp2 = fopen("test_layer_down.dat", "wb");
+    fwrite(data, 1, frame_size_bytes, fp2);
+    fclose(fp2);
+
+
+    // then check if the animate_placement_up can move the first rectangle to the up layer
+    animate_placement_up(placement);
+    //generate the frame again after change the layer of the first rectangle
+    animate_generate_frame(canvas, 0, 1, data); 
+    FILE* fp3 = fopen("test_layer_up.dat", "wb");
+    fwrite(data, 1, frame_size_bytes, fp3);
+    fclose(fp3);
+
+
+    // then check if the animate_placement_buttom can move the second rectangle to the up layer
+    animate_placement_bottom(placement);
+    //generate the frame again after change the layer of the first rectangle
+    animate_generate_frame(canvas, 0, 1, data); 
+    FILE* fp4 = fopen("test_layer_bottom.dat", "wb");
+    fwrite(data, 1, frame_size_bytes, fp4);
+    fclose(fp4);
+
+
+
+    free(data);
+    
+    animate_destroy_canvas(canvas);
+    animate_destroy_sprite(rectangle);
+    animate_destroy_sprite(rectangle2);
+    return 0;
+
+}
