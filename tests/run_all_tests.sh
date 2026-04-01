@@ -45,6 +45,10 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+
+echo "=== Third Test: check for the pixel data of the circle ==="
+xxd -g4 ./tests/test_create_circle.dat > ./tests/circle_answer.hex
+
 # 2. Using Valgrind to check for memory leaks and errors
 echo "Checking for memory leaks and errors..."
 valgrind --leak-check=full --error-exitcode=1 ./test_create_circle > /dev/null 2>&1

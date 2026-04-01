@@ -25,7 +25,7 @@ struct sprite {
 };
 
 int main(int argc, char** argv) {
-    size_t radius = 3;
+    size_t radius = 1;
     color_t c = animate_color_argb(255, 0, 0, 255);
     struct sprite* circle = animate_create_circle(radius, c, 1);
 
@@ -51,17 +51,16 @@ int main(int argc, char** argv) {
         return 1;
     }
 
-    animate_destroy_sprite(circle);
 
     // 4. create a canvas and check the result
     color_t black = animate_color_argb(255, 0, 0, 0);
-    struct canvas* canvas = animate_create_canvas(10, 10, black);
-    if (canvas) {
+    struct canvas* canvas = animate_create_canvas(4, 4, black);
+    if (canvas == NULL) {
         animate_destroy_sprite(circle);
         return 1;
     }
 
-    struct sprite_placement* placement = animate_place_sprite(canvas, circle, 2,2);
+    struct sprite_placement* placement = animate_place_sprite(canvas, circle, 0,0);
 
     if (placement == NULL){
         animate_destroy_canvas(canvas);
@@ -70,7 +69,7 @@ int main(int argc, char** argv) {
         return 1;
     }
 
-
+    
     size_t frame_size_bytes = animate_frame_size_bytes(canvas);
     void* data = malloc(frame_size_bytes);
     animate_generate_frame(canvas, 0, 1, data);
@@ -80,6 +79,7 @@ int main(int argc, char** argv) {
     fclose(fp);
 
     free(data);
+    
     animate_destroy_canvas(canvas);
     animate_destroy_sprite(circle);
     return 0;
